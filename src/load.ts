@@ -1,5 +1,6 @@
 import { Registry } from "./command.ts";
 import { project } from "./project/project.ts";
+import { generate } from "./routes/generate.ts";
 
 const [command, ...args] = Deno.args;
 
@@ -13,7 +14,7 @@ OPTIONS
   -h, --help
   -V, --version
 
-SUBCOMMANDS
+COMMANDS
   project
 `;
 
@@ -35,6 +36,10 @@ registry.add({
   names: ["p", "project"],
   task: project,
 });
+registry.add({
+  names: ["r", "routes"],
+  task: generate,
+});
 
 const task = registry.find(command);
 
@@ -43,6 +48,6 @@ if (typeof task?.task === "function") {
   console.log(result);
 } else {
   console.error(`
-Error: "${command}" is not a valid command.
+Error: "${command || "no arguments"}" is not a valid command.
 ${help}`);
 }
