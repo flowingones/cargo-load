@@ -1,9 +1,48 @@
-import { generate } from "./routes/generate.ts";
+import { Registry } from "./command.ts";
+import { project } from "./project/project.ts";
 
-async function command(args: string[]) {
-  if (args[0] === "routes:generate") {
-    await generate();
-  }
+const [command, ...args] = Deno.args;
+
+const help = `
+Cargo Load is a CLI to manage your Cargo applications
+ 
+USAGE:
+  load [OPTIONS] [COMMAND]
+  
+OPTIONS
+  -h, --help
+  -V, --version
+
+SUBCOMMANDS
+  project
+`;
+
+const cargo_load_version = `0.0.1`;
+
+const registry = new Registry();
+
+registry.add({
+  names: ["-h", "--help"],
+  task: () => {
+    return help;
+  },
+});
+registry.add({
+  names: ["-V", "--version"],
+  task: () => `Cargo Load ${cargo_load_version}`,
+});
+registry.add({
+  names: ["p", "project"],
+  task: project,
+});
+
+const task = registry.find(command);
+
+if (typeof task?.task === "function") {
+  const result = await task.task(args);
+  console.log(result);
+} else {
+  console.error(`
+Error: "${command}" is not a valid command.
+${help}`);
 }
-
-await command(Deno.args);
