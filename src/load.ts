@@ -6,7 +6,8 @@ import routes from "./routes/routes.ts";
 const [command, ...args] = Deno.args;
 
 const help = `!---
-! Cargo Load is not production ready. OPTIONS and COMMANDS might change in a future version.
+! Cargo Load is not production ready.
+! OPTIONS and COMMANDS might change in a future version.
 ! Use it with caution!
 !---
 
