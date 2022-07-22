@@ -8,16 +8,16 @@ interface Route {
 
 const routes: Route[] = [];
 
-export async function generate(
+export default async (
   path = "pages",
-): Promise<string> {
+): Promise<string> => {
   await scan(path);
   write(path);
 
   // Emptying the array
   routes.length = 0;
   return "";
-}
+};
 
 async function scan(path: string): Promise<void> {
   try {
