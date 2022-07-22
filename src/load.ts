@@ -1,6 +1,7 @@
 import { Registry } from "./command.ts";
-import { project } from "./project/project.ts";
-import { generate } from "./routes/generate.ts";
+
+import project from "./project/project.ts";
+import routes from "./routes/routes.ts";
 
 const [command, ...args] = Deno.args;
 
@@ -39,7 +40,7 @@ registry.add({
 });
 registry.add({
   names: ["r", "routes"],
-  task: generate,
+  task: routes,
 });
 
 const task = registry.find(command);
