@@ -2,7 +2,10 @@
 
 Command line interface for your Cargo applications
 
-Cargo Load provides several commands that you can use when developing your
+> Cargo Load is not production ready. OPTIONS and COMMANDS might change in a
+> future version. Use it with caution!
+
+Cargo Load provides several commands to use while developing your Cargo
 application:
 
 ```cli
