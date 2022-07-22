@@ -16,6 +16,7 @@ OPTIONS
 
 COMMANDS
   project
+  routes
 `;
 
 const cargo_load_version = `0.0.1`;
