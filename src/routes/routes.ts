@@ -1,4 +1,4 @@
-import { parse } from "../deps.ts";
+import { parse, parseArgs } from "../deps.ts";
 
 interface Route {
   path: string;
@@ -9,14 +9,17 @@ interface Route {
 const routes: Route[] = [];
 
 export default async (
-  path = "pages",
+  args: string[],
 ): Promise<string> => {
+  const options = parseArgs(args);
+  const path = options.path || "pages";
+
   await scan(path);
   write(path);
 
   // Emptying the array
   routes.length = 0;
-  return "";
+  return `File ".routes.ts" sucessfully created!`;
 };
 
 async function scan(path: string): Promise<void> {
@@ -33,8 +36,12 @@ async function scan(path: string): Promise<void> {
         await scan(`${path}/${entry.name}`);
       }
     }
-  } catch (_err: unknown) {
-    console.error(`Not able to load files from the "${path}" directory `);
+  } catch (err) {
+    if (Deno.errors.NotFound) {
+      console.error(`Directory "${path}" does not exist.`);
+      return;
+    }
+    console.error(`Not able to load files from the "${path}" directory.`);
   }
 }
 
