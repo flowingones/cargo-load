@@ -25,7 +25,7 @@ COMMANDS
   routes
 `;
 
-const cargo_load_version = `0.0.1`;
+const CARGO_LOAD_VERSION = `0.0.2`;
 
 const registry = new Registry();
 
@@ -37,7 +37,7 @@ registry.add({
 });
 registry.add({
   names: ["-V", "--version"],
-  task: () => `Cargo Load ${cargo_load_version}`,
+  task: () => `Cargo Load ${CARGO_LOAD_VERSION}`,
 });
 registry.add({
   names: ["p", "project"],
