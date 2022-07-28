@@ -1,6 +1,6 @@
-import { InputLoop } from "../deps.ts";
 import { Registry } from "../command.ts";
 import { create as createDir } from "./directory.ts";
+import { choose, question } from "../input.ts";
 
 import basic from "./types/basic.ts";
 
@@ -20,28 +20,19 @@ export default async () => {
   return "";
 };
 
-async function ask(question: string): Promise<string> {
-  const input = new InputLoop();
-  const projectName = await input.question(`${question} `, false);
+async function ask(q: string): Promise<string> {
+  const projectName = await question(q);
   if (!projectName) {
-    return ask(question);
+    return ask(q);
   }
   return projectName;
 }
 
 async function type(projectName: string) {
-  const input = new InputLoop();
-  console.log("What type of application do you want to create?");
-  const choice = await input.choose(registry.all().map((cmd) => cmd.names[0]));
-
-  const selected = choice.findIndex((bool) => {
-    return bool;
+  console.log("\nSelect the type of application to initialize:");
+  const input = await choose(registry.all().map((cmd) => cmd.names[0]));
+  const type = registry.all().find((type) => {
+    return type.names[0] === input;
   });
-
-  if (typeof selected === "undefined" || selected < 0) {
-    console.error("Application type not supported!");
-    return;
-  }
-
-  await registry.all()[selected].task(projectName);
+  type?.task(projectName);
 }
