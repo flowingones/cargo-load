@@ -25,7 +25,7 @@ COMMANDS
   routes
 `;
 
-const CARGO_LOAD_VERSION = `0.0.2`;
+const CARGO_LOAD_VERSION = `0.0.3`;
 
 const registry = new Registry();
 
