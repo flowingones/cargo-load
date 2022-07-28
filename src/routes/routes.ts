@@ -1,4 +1,4 @@
-import { parse, parseArgs } from "../deps.ts";
+import { join, parse, parseArgs } from "../deps.ts";
 
 interface Route {
   path: string;
@@ -33,11 +33,11 @@ async function scan(path: string): Promise<void> {
         });
       }
       if (entry.isDirectory) {
-        await scan(`${path}/${entry.name}`);
+        await scan(join(path, entry.name));
       }
     }
   } catch (err) {
-    if (Deno.errors.NotFound) {
+    if (err instanceof Deno.errors.NotFound) {
       console.error(`Directory "${path}" does not exist.`);
       return;
     }
