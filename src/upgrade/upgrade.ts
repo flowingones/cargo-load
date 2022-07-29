@@ -1,6 +1,6 @@
 export default async function (): Promise<string> {
   await install();
-  return 'Upgrade of "Cargo Load" success successful';
+  return 'Upgrade of "Cargo Load" successful';
 }
 
 async function install(): Promise<void> {
