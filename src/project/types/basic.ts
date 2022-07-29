@@ -1,5 +1,6 @@
 import { create as createFile } from "../file.ts";
 import { create as createDir } from "../directory.ts";
+import { join } from "../../deps.ts";
 
 const denoConfigContent = `{
   "importMap": "./import_map.json",
@@ -36,13 +37,13 @@ export default async (projectName: string) => {
 };
 
 async function appTs(projectName: string) {
-  await createFile(`${projectName}/app.ts`, appTsContent);
+  await createFile(join(projectName, "app.ts"), appTsContent);
 }
 
 async function denoConfig(projectName: string) {
-  await createFile(`${projectName}/deno.json`, denoConfigContent);
+  await createFile(join(projectName, "deno.json"), denoConfigContent);
 }
 
 async function importMap(projectName: string) {
-  await createFile(`${projectName}/import_map.json`, importMapContent);
+  await createFile(join(projectName, "import_map.json"), importMapContent);
 }
