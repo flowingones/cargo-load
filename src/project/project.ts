@@ -8,6 +8,7 @@ const registry = new Registry();
 
 registry.add({
   names: ["basic"],
+  description: "Basic application structure",
   task: basic,
 });
 
