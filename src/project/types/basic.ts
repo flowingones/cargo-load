@@ -28,8 +28,8 @@ Get("/", () => {
 `;
 
 export default async (projectName: string) => {
-  await createDir(`${projectName}/src`);
-  await createDir(`${projectName}/config`);
+  await createDir(join(projectName, "src"));
+  await createDir(join(projectName, "config"));
   await denoConfig(projectName);
   await importMap(projectName);
   await appTs(projectName);
