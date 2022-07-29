@@ -6,7 +6,7 @@ import upgrade from "./upgrade/upgrade.ts";
 
 const [command, ...args] = Deno.args;
 
-const CARGO_LOAD_VERSION = `0.0.3`;
+const CARGO_LOAD_VERSION = `0.0.4`;
 
 const registry = new Registry();
 
