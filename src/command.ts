@@ -1,5 +1,6 @@
 export interface Command {
   names: string[];
+  description: string;
   task: (...args: any[]) => string | Promise<string>;
 }
 
