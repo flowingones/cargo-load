@@ -5,7 +5,7 @@ import upgrade from "./upgrade/upgrade.ts";
 
 const [command, ...args] = Deno.args;
 
-const CARGO_LOAD_VERSION = `0.0.8`;
+const CARGO_LOAD_VERSION = `0.0.9`;
 
 const registry = new Registry();
 
@@ -29,7 +29,7 @@ const defaultCommands: Command[] = [{
   task: project,
 }];
 
-await autoloadCommands(`file:${Deno.cwd()}/config/load.ts`);
+await autoloadCommands(`file://${Deno.cwd()}/config/load.ts`);
 
 const task = registry.find(command);
 
