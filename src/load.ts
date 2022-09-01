@@ -1,5 +1,3 @@
-import { join } from "./deps.ts";
-
 import { Command, Registry } from "./command.ts";
 
 import project from "./project/project.ts";
