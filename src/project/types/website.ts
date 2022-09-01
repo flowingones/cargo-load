@@ -27,13 +27,27 @@ Get("/", () => {
 (await bootstrap()).run();
 `;
 
+const cargoConfigContent = `import { autoloadAssets } from "cargo/http/mod.ts";
+
+export default {
+  tasks: {
+    onBootstrap: [
+      autoloadAssets("assets")
+    ],
+  },
+};
+`;
+
 export default async (projectName: string) => {
   await createDir(join(projectName, "src"));
   await createDir(join(projectName, "config"));
+  await createDir(join(projectName, "assets"));
+  await createDir(join(projectName, "pages"));
   await denoConfig(projectName);
   await importMap(projectName);
   await appTs(projectName);
-  return "Basic application created!";
+  await cargoConfig(projectName);
+  return "Website application created!";
 };
 
 async function appTs(projectName: string) {
@@ -46,4 +60,8 @@ async function denoConfig(projectName: string) {
 
 async function importMap(projectName: string) {
   await createFile(join(projectName, "import_map.json"), importMapContent);
+}
+
+async function cargoConfig(projectName: string) {
+  await createFile(join(projectName, "config", "cargo.ts"), cargoConfigContent);
 }
