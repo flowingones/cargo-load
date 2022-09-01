@@ -31,7 +31,7 @@ const defaultCommands: Command[] = [{
   task: project,
 }];
 
-await autoloadCommands(join(Deno.cwd(), "config/load.ts"));
+await autoloadCommands(join("config", "load.ts"));
 
 const task = registry.find(command);
 
