@@ -13,7 +13,7 @@ const importMapContent = `{
   "imports": {
     "app/": "./src/",
     "config/": "./config/",
-    "cargo/": "https://deno.land/x/cargo@0.1.41/"
+    "cargo/": "https://deno.land/x/cargo@0.1.43/"
   }
 }`;
 

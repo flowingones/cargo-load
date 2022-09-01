@@ -3,7 +3,7 @@ import { Command, Registry } from "./command.ts";
 import project from "./project/project.ts";
 import upgrade from "./upgrade/upgrade.ts";
 
-const [command, ...args] = Deno.args;
+const [cmd, ...args] = Deno.args;
 
 const CARGO_LOAD_VERSION = `0.0.9`;
 
@@ -12,33 +12,33 @@ const registry = new Registry();
 const defaultArguments: Command[] = [{
   names: ["u", "upgrade"],
   description: `Upgrade "Cargo Load" executable to the lastest version`,
-  task: upgrade,
+  command: upgrade,
 }, {
   names: ["-V", "--version"],
   description: 'Show current version of "Cargo Load"',
-  task: () => `Cargo Load ${CARGO_LOAD_VERSION}`,
+  command: () => `Cargo Load ${CARGO_LOAD_VERSION}`,
 }, {
   names: ["-h", "--help"],
   description: "Show help",
-  task: help,
+  command: help,
 }];
 
 const defaultCommands: Command[] = [{
   names: ["p", "project"],
   description: "Create a new project structure",
-  task: project,
+  command: project,
 }];
 
 await autoloadCommands(`file://${Deno.cwd()}/config/load.ts`);
 
-const task = registry.find(command);
+const command = registry.find(cmd);
 
-if (typeof task?.task === "function") {
-  const result = await task.task(args);
+if (typeof command?.command === "function") {
+  const result = await command.command(args);
   console.log(result);
 } else {
   console.error(`
-Error: "${command || "no arguments"}" is not a valid command.
+Error: "${cmd || "no arguments"}" is not a valid command.
 ${help()}`);
 }
 

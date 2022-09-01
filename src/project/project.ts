@@ -9,7 +9,7 @@ const registry = new Registry();
 registry.add({
   names: ["basic"],
   description: "Basic application structure",
-  task: basic,
+  command: basic,
 });
 
 export default async () => {
@@ -35,5 +35,5 @@ async function type(projectName: string) {
   const type = registry.all().find((type) => {
     return type.names[0] === input;
   });
-  type?.task(projectName);
+  type?.command(projectName);
 }
