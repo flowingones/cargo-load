@@ -31,7 +31,7 @@ const defaultCommands: Command[] = [{
   task: project,
 }];
 
-await autoloadCommands(join("config", "load.ts"));
+await autoloadCommands(join("./config", "load.ts"));
 
 const task = registry.find(command);
 
@@ -90,6 +90,7 @@ async function autoloadCommands(path: string) {
       console.log(`Configuration loaded from ${path}`);
     }
   } catch (_e) {
+    console.log(_e);
   } finally {
     commands = [...defaultCommands, ...commands, ...defaultArguments];
 
