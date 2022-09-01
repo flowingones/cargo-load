@@ -7,7 +7,7 @@ import upgrade from "./upgrade/upgrade.ts";
 
 const [command, ...args] = Deno.args;
 
-const CARGO_LOAD_VERSION = `0.0.4`;
+const CARGO_LOAD_VERSION = `0.0.5`;
 
 const registry = new Registry();
 
@@ -90,7 +90,6 @@ async function autoloadCommands(path: string) {
       console.log(`Configuration loaded from ${path}`);
     }
   } catch (_e) {
-    console.error(_e.message);
   } finally {
     commands = [...defaultCommands, ...commands, ...defaultArguments];
 
