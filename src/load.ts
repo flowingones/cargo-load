@@ -82,13 +82,16 @@ function expand(value: string, length: number) {
 async function autoloadCommands(path: string) {
   let commands: Command[] = [];
   try {
+    await Deno.lstat(path);
     const config = await import(path);
     if (Array.isArray(config.default)) {
       commands = config.default;
       console.log(`Configuration loaded from ${path}`);
     }
   } catch (_e) {
-    console.log(_e);
+    if (!(_e instanceof Deno.errors.NotFound)) {
+      console.error(_e);
+    }
   } finally {
     commands = [...defaultCommands, ...commands, ...defaultArguments];
 
