@@ -1,6 +1,7 @@
 import { join } from "../../deps.ts";
 import { create as createFile } from "../file.ts";
 import { create as createDir } from "../directory.ts";
+import { version } from "../version.ts";
 
 const denoConfigContent = `{
   "compilerOptions": {
@@ -18,14 +19,16 @@ const denoConfigContent = `{
   },
 }`;
 
-const importMapContent = `{
+function importMapContent(cargoVersion: string, parcelVersion: string) {
+  return `{
   "imports": {
     "app/": "./src/",
     "config/": "./config/",
-    "cargo/": "https://deno.land/x/cargo@0.1.43/",
-    "parcel/": "https://deno.land/x/cargo_parcel@0.1.49/"
+    "cargo/": "https://deno.land/x/cargo@${cargoVersion}/",
+    "parcel/": "https://deno.land/x/cargo_parcel@${parcelVersion}/"
   }
 }`;
+}
 
 const appTsContent = `import { bootstrap } from "cargo/mod.ts";
 import cargoConfig from "config/cargo.ts";
@@ -44,7 +47,7 @@ export default () => {
 
 const cargoConfigContent = `import { autoloadAssets } from "cargo/http/mod.ts";
 import { autoloadPages } from "parcel/cargo/tasks/autoload.ts";
-import { pages } from "../.manifest/.pages.ts";
+import pages from "../.manifest/.pages.ts";
 import islands from "../.manifest/.islands.ts";
 
 export default {
@@ -60,12 +63,13 @@ export default {
 };
 `;
 
-const loadConfigContent =
-  `import { pages } from "https://deno.land/x/cargo_parcel@0.1.49/cargo/commands/pages.ts";
-import { islands } from "https://deno.land/x/cargo_parcel@0.1.49/cargo/commands/islands.ts";
+function loadConfigContent(parcelVersion: string) {
+  return `import { pages } from "https://deno.land/x/cargo_parcel@${parcelVersion}/cargo/commands/pages.ts";
+import { islands } from "https://deno.land/x/cargo_parcel@${parcelVersion}/cargo/commands/islands.ts";
 
 export default [pages(), islands()];
 `;
+}
 
 export default async (projectName: string) => {
   await createDir(join(projectName, "src"));
@@ -94,7 +98,15 @@ async function denoConfig(projectName: string) {
 }
 
 async function importMap(projectName: string) {
-  await createFile(join(projectName, "import_map.json"), importMapContent);
+  await createFile(
+    join(projectName, "import_map.json"),
+    importMapContent(
+      ...await Promise.all([
+        await version("cargo", "0.1.45"),
+        await version("cargo_parcel", "0.1.55"),
+      ]),
+    ),
+  );
 }
 
 async function cargoConfig(projectName: string) {
@@ -102,5 +114,8 @@ async function cargoConfig(projectName: string) {
 }
 
 async function loadConfig(projectName: string) {
-  await createFile(join(projectName, "config", "load.ts"), loadConfigContent);
+  await createFile(
+    join(projectName, "config", "load.ts"),
+    loadConfigContent(await version("cargo_parcel", "0.1.55")),
+  );
 }

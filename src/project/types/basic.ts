@@ -1,6 +1,7 @@
 import { join } from "../../deps.ts";
 import { create as createFile } from "../file.ts";
 import { create as createDir } from "../directory.ts";
+import { version } from "../version.ts";
 
 const denoConfigContent = `{
   "importMap": "./import_map.json",
@@ -9,13 +10,15 @@ const denoConfigContent = `{
   },
 }`;
 
-const importMapContent = `{
+function importMapContent(cargoVersion: string) {
+  return `{
   "imports": {
     "app/": "./src/",
     "config/": "./config/",
-    "cargo/": "https://deno.land/x/cargo@0.1.43/"
+    "cargo/": "https://deno.land/x/cargo${cargoVersion}/"
   }
 }`;
+}
 
 const appTsContent = `import { bootstrap } from "cargo/mod.ts";
 import { Get } from "cargo/http/mod.ts";
@@ -45,5 +48,8 @@ async function denoConfig(projectName: string) {
 }
 
 async function importMap(projectName: string) {
-  await createFile(join(projectName, "import_map.json"), importMapContent);
+  await createFile(
+    join(projectName, "import_map.json"),
+    importMapContent(await version("cargo", "0.1.45")),
+  );
 }
