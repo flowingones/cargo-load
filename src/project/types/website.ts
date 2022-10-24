@@ -102,7 +102,7 @@ async function importMap(projectName: string) {
     join(projectName, "import_map.json"),
     importMapContent(
       ...await Promise.all([
-        await version("cargo", "0.1.45"),
+        await version("cargo", "0.1.47"),
         await version("cargo_parcel", "0.1.55"),
       ]),
     ),
