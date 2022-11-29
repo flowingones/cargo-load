@@ -45,16 +45,16 @@ export default () => {
 };
 `;
 
-const cargoConfigContent = `import { autoloadAssets } from "cargo/http/mod.ts";
-import { autoloadPages } from "parcel/cargo/tasks/autoload.ts";
+const cargoConfigContent = `import { Assets } from "cargo/http/tasks/mod.ts";
+import { Parcel } from "parcel/cargo/tasks/mod.ts";
 import pages from "../.manifest/.pages.ts";
 import islands from "../.manifest/.islands.ts";
 
 export default {
   tasks: {
     onBootstrap: [
-      autoloadAssets("assets"),
-      autoloadPages({
+      Assets("assets"),
+      await Parcel({
         pages,
         islands,
       }),
