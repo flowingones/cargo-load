@@ -50,6 +50,6 @@ async function denoConfig(projectName: string) {
 async function importMap(projectName: string) {
   await createFile(
     join(projectName, "import_map.json"),
-    importMapContent(await version("cargo", "0.1.47")),
+    importMapContent(await version("cargo", "0.1.48")),
   );
 }

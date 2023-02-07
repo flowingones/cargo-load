@@ -90,7 +90,7 @@ async function appTs(projectName: string) {
 }
 
 async function indexPage(projectName: string) {
-  await createFile(join(projectName, "pages", "index.tsx"), indexPageContent);
+  await createFile(join(projectName, "pages", "page.tsx"), indexPageContent);
 }
 
 async function denoConfig(projectName: string) {
@@ -102,8 +102,8 @@ async function importMap(projectName: string) {
     join(projectName, "import_map.json"),
     importMapContent(
       ...await Promise.all([
-        await version("cargo", "0.1.47"),
-        await version("cargo_parcel", "0.1.55"),
+        await version("cargo", "0.1.48"),
+        await version("cargo_parcel", "0.1.70"),
       ]),
     ),
   );
@@ -116,6 +116,6 @@ async function cargoConfig(projectName: string) {
 async function loadConfig(projectName: string) {
   await createFile(
     join(projectName, "config", "load.ts"),
-    loadConfigContent(await version("cargo_parcel", "0.1.55")),
+    loadConfigContent(await version("cargo_parcel", "0.1.70")),
   );
 }
