@@ -19,13 +19,19 @@ const denoConfigContent = `{
   },
 }`;
 
-function importMapContent(cargoVersion: string, parcelVersion: string) {
+function importMapContent(
+  cargoVersion: string,
+  parcelVersion: string,
+  stdLibVersion: string,
+) {
   return `{
   "imports": {
     "app/": "./src/",
     "config/": "./config/",
     "cargo/": "https://deno.land/x/cargo@${cargoVersion}/",
     "parcel/": "https://deno.land/x/cargo_parcel@${parcelVersion}/"
+    "inspect/": "https://deno.land/x/cargo_inspect@${cargoVersion}/",
+    "std/": "https://deno.land/std@${stdLibVersion}/",
   }
 }`;
 }
@@ -104,6 +110,7 @@ async function importMap(projectName: string) {
       ...await Promise.all([
         await version("cargo", "0.1.48"),
         await version("cargo_parcel", "0.1.70"),
+        await version("std", "0.184.0"),
       ]),
     ),
   );
