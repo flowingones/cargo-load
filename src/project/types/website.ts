@@ -29,7 +29,7 @@ function importMapContent(
     "app/": "./src/",
     "config/": "./config/",
     "cargo/": "https://deno.land/x/cargo@${cargoVersion}/",
-    "parcel/": "https://deno.land/x/cargo_parcel@${parcelVersion}/"
+    "parcel/": "https://deno.land/x/cargo_parcel@${parcelVersion}/",
     "inspect/": "https://deno.land/x/cargo_inspect@${cargoVersion}/",
     "std/": "https://deno.land/std@${stdLibVersion}/",
   }
