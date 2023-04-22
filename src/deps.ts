@@ -1,1 +1,1 @@
-export { join } from "https://deno.land/std@0.159.0/path/mod.ts";
+export { join } from "https://deno.land/std@0.184.0/path/mod.ts";
