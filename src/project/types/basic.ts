@@ -6,16 +6,18 @@ import { version } from "../version.ts";
 const denoConfigContent = `{
   "importMap": "./import_map.json",
   "tasks": {
-    "dev": "deno run --allow-all --watch=./pages,./assets,./src app.ts"
+    "dev": "deno run --allow-all --watch app.ts"
   },
 }`;
 
-function importMapContent(cargoVersion: string) {
+function importMapContent(cargoVersion: string, stdLibVersion: string) {
   return `{
   "imports": {
     "app/": "./src/",
     "config/": "./config/",
-    "cargo/": "https://deno.land/x/cargo${cargoVersion}/"
+    "cargo/": "https://deno.land/x/cargo@${cargoVersion}/"
+    "inspect/": "https://deno.land/x/cargo_inspect@${cargoVersion}/"
+    "std/": "https://deno.land/std@${stdLibVersion}/"
   }
 }`;
 }
@@ -50,6 +52,11 @@ async function denoConfig(projectName: string) {
 async function importMap(projectName: string) {
   await createFile(
     join(projectName, "import_map.json"),
-    importMapContent(await version("cargo", "0.1.48")),
+    importMapContent(
+      ...await Promise.all([
+        await version("cargo", "0.1.63"),
+        await version("std", "0.204.0"),
+      ]),
+    ),
   );
 }
