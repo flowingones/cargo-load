@@ -5,7 +5,8 @@ import { version } from "../version.ts";
 
 const denoConfigContent = `{
   "compilerOptions": {
-    "jsxFactory": "tag",
+    "jsx": "react-jsx",
+    "jsxImportSource": "parcel",
     "lib": [
       "dom",
       "dom.iterable",
@@ -15,7 +16,8 @@ const denoConfigContent = `{
   },
   "importMap": "./import_map.json",
   "tasks": {
-    "dev": "load pages && load islands && deno run --allow-all --watch=./pages,./assets,./src app.ts"
+    "dev": "deno run --allow-all --watch dev.ts",
+    "debug": "deno run --inspect-brk --allow-all dev.ts"
   },
 }`;
 
@@ -30,6 +32,7 @@ function importMapContent(
     "config/": "./config/",
     "cargo/": "https://deno.land/x/cargo@${cargoVersion}/",
     "parcel/": "https://deno.land/x/cargo_parcel@${parcelVersion}/",
+    "parcel/jsx-runtime": "https://deno.land/x/cargo_parcel@${parcelVersion}/jsx-runtime.ts",
     "inspect/": "https://deno.land/x/cargo_inspect@${cargoVersion}/",
     "std/": "https://deno.land/std@${stdLibVersion}/"
   }
@@ -44,15 +47,22 @@ const app = (await bootstrap(cargoConfig))
 app.run();
 `;
 
-const indexPageContent = `import { tag } from "parcel/mod.ts";
+const devTsContent = `import { bootstrap } from "cargo/mod.ts";
+import cargoDevConfig from "config/cargo.dev.ts";
 
-export default () => {
+const app = (await bootstrap(cargoDevConfig))
+
+app.run();
+`;
+
+const indexPageContent = `export default () => {
   return <h1>Hello World!</h1>;
 };
 `;
 
 const cargoConfigContent = `import { Assets } from "cargo/http/tasks/mod.ts";
 import { Parcel } from "parcel/cargo/tasks/mod.ts";
+import parcelConfig from "config/parcel.ts";
 import pages from "../.manifest/.pages.ts";
 import islands from "../.manifest/.islands.ts";
 
@@ -63,19 +73,30 @@ export default {
       await Parcel({
         pages,
         islands,
+        ...parcelConfig
       }),
     ],
   },
 };
 `;
 
-function loadConfigContent(parcelVersion: string) {
-  return `import { pages } from "https://deno.land/x/cargo_parcel@${parcelVersion}/cargo/commands/pages.ts";
-import { islands } from "https://deno.land/x/cargo_parcel@${parcelVersion}/cargo/commands/islands.ts";
+const cargoDevConfigContent = `import { Assets } from "cargo/http/tasks/mod.ts";
+import { Parcel, Manifest } from "parcel/cargo/tasks/mod.ts";
+import parcelConfig from "config/parcel.ts";
 
-export default [pages(), islands()];
+export default {
+  tasks: {
+    onBootstrap: [
+      Assets("assets"),
+      await Manifest(),
+      await Parcel(parcelConfig),
+    ],
+  },
+};
 `;
-}
+
+const parcelConfigContent = `export default {};
+`;
 
 export default async (projectName: string) => {
   await createDir(join(projectName, "src"));
@@ -87,12 +108,13 @@ export default async (projectName: string) => {
   await appTs(projectName);
   await indexPage(projectName);
   await cargoConfig(projectName);
-  await loadConfig(projectName);
+  await parcelConfig(projectName);
   return "Website application created!";
 };
 
 async function appTs(projectName: string) {
   await createFile(join(projectName, "app.ts"), appTsContent);
+  await createFile(join(projectName, "dev.ts"), devTsContent);
 }
 
 async function indexPage(projectName: string) {
@@ -108,9 +130,9 @@ async function importMap(projectName: string) {
     join(projectName, "import_map.json"),
     importMapContent(
       ...await Promise.all([
-        await version("cargo", "0.1.48"),
-        await version("cargo_parcel", "0.1.70"),
-        await version("std", "0.184.0"),
+        await version("cargo", "0.1.63"),
+        await version("cargo_parcel", "0.2.9"),
+        await version("std", "0.204.0"),
       ]),
     ),
   );
@@ -118,11 +140,15 @@ async function importMap(projectName: string) {
 
 async function cargoConfig(projectName: string) {
   await createFile(join(projectName, "config", "cargo.ts"), cargoConfigContent);
+  await createFile(
+    join(projectName, "config", "cargo.dev.ts"),
+    cargoDevConfigContent,
+  );
 }
 
-async function loadConfig(projectName: string) {
+async function parcelConfig(projectName: string) {
   await createFile(
-    join(projectName, "config", "load.ts"),
-    loadConfigContent(await version("cargo_parcel", "0.1.70")),
+    join(projectName, "config", "parcel.ts"),
+    parcelConfigContent,
   );
 }
